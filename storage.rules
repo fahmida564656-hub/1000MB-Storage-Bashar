@@ -1,0 +1,39 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User files must strictly reside in their own directory: users/{userId}/files/{fileId}
+    match /users/{userId}/files/{fileId} {
+      // Strictly isolate user files - no user can read or write other users' files
+      allow read: if isOwner(userId);
+      
+      // Upload validation:
+      // 1. Must be the owner
+      // 2. File size must be under 1000MB (1048576000 bytes)
+      // 3. User metadata must include ownerId
+      allow write: if isOwner(userId)
+                   && request.resource.size < 1048576000;
+                   
+      // Delete permission
+      allow delete: if isOwner(userId);
+    }
+    
+    // User trash folder
+    match /users/{userId}/trash/{fileId} {
+      allow read, write, delete: if isOwner(userId);
+    }
+    
+    // Deny all other access by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

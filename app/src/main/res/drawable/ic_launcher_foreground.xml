@@ -1,0 +1,59 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Cloud storage container inside 66dp safe zone (21..87) -->
+    <!-- Cloud Outline and Glow Fill -->
+    <path
+        android:pathData="M54,28 C45.5,28 38.5,34.2 37.3,42.4 C33.1,43.2 30,46.8 30,51.3 C30,56.2 34,60.2 39,60.2 L69,60.2 C73.4,60.2 77,56.6 77,52.2 C77,48.1 73.8,44.7 69.8,44.2 C68.8,35.2 62.1,28 54,28 Z"
+        android:strokeWidth="2.5"
+        android:strokeColor="#38BDF8">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="28"
+                android:endX="54"
+                android:endY="60"
+                android:type="linear">
+                <item android:color="#330284C7" android:offset="0.0" />
+                <item android:color="#660369A1" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Storage Disks / Platter Layers -->
+    <!-- Disk 1 (Upper Platter) -->
+    <path
+        android:fillColor="#E0F2FE"
+        android:strokeColor="#38BDF8"
+        android:strokeWidth="1.2"
+        android:pathData="M38,65 C38,62.5 45.2,60.5 54,60.5 C62.8,60.5 70,62.5 70,65 C70,67.5 62.8,69.5 54,69.5 C45.2,69.5 38,67.5 38,65 Z" />
+    <path
+        android:fillColor="#BAE6FD"
+        android:pathData="M38,65 C38,67.5 45.2,69.5 54,69.5 C62.8,69.5 70,67.5 70,65 L70,69 C70,71.5 62.8,73.5 54,73.5 C45.2,73.5 38,71.5 38,69 Z" />
+
+    <!-- Disk 2 (Lower Platter) -->
+    <path
+        android:fillColor="#7DD3FC"
+        android:pathData="M38,71 C38,73.5 45.2,75.5 54,75.5 C62.8,75.5 70,73.5 70,71 L70,75 C70,77.5 62.8,79.5 54,79.5 C45.2,79.5 38,77.5 38,75 Z" />
+
+    <!-- Disk 3 (Base Platter) -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M38,77 C38,79.5 45.2,81.5 54,81.5 C62.8,81.5 70,79.5 70,77 L70,81 C70,83.5 62.8,85.5 54,85.5 C45.2,85.5 38,83.5 38,81 Z" />
+
+    <!-- Fast Upward Cloud Sync Arrow -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,34 L46,43 L51,43 L51,52 L57,52 L57,43 L62,43 Z" />
+
+    <!-- High-tech Status LED Blip -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M65,77 A2,2 0 1,1 65,77.01 Z" />
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M61,77 A1.5,1.5 0 1,1 61,77.01 Z" />
+</vector>

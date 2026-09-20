@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions for secure server-side authorization
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.role == 'admin' || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+
+    // Users Collection: /users/{userId}
+    match /users/{userId} {
+      // Users can read only their own profile; Admins can read all profiles
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Registration: User can create their initial record
+      // Critical fields like role and quota are protected
+      allow create: if isOwner(userId)
+        && request.resource.data.userId == userId
+        && request.resource.data.role == 'user'
+        && request.resource.data.storageQuotaBytes == 1048576000
+        && request.resource.data.storageUsedBytes == 0;
+      
+      // Updates: Normal users can update displayName and updatedAt
+      // Normal users CANNOT manipulate quota, used bytes, role, or userId
+      allow update: if isOwner(userId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'updatedAt', 'status'])
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.storageQuotaBytes == resource.data.storageQuotaBytes
+        && request.resource.data.storageUsedBytes == resource.data.storageUsedBytes
+        || isAdmin();
+        
+      // Account Deletion: Owner or Admin can delete profile
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
+    // Files Collection: /files/{fileId}
+    match /files/{fileId} {
+      // Authenticated users can read only their own files
+      allow read: if isAuthenticated() && (resource.data.ownerId == request.auth.uid || isAdmin());
+      
+      // Create file record: Owner must match authenticated user
+      // Status must start as 'active' and sizeBytes must be positive
+      allow create: if isAuthenticated() 
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.status in ['active', 'trash']
+        && request.resource.data.sizeBytes > 0;
+        
+      // Update file record (rename, move to trash, restore):
+      // Owner can update fileName, status, deletedAt, updatedAt
+      // Owner CANNOT change ownerId or sizeBytes
+      allow update: if isAuthenticated() 
+        && resource.data.ownerId == request.auth.uid
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.sizeBytes == resource.data.sizeBytes
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fileName', 'status', 'deletedAt', 'updatedAt', 'category'])
+        || isAdmin();
+        
+      // Permanent Delete: Owner or Admin only
+      allow delete: if isAuthenticated() && (resource.data.ownerId == request.auth.uid || isAdmin());
+    }
+  }
+}

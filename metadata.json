@@ -1,0 +1,6 @@
+{
+  "name": "1000MB Storage",
+  "description": "1000MB Storage - আপনার ফাইল, আপনার নিরাপদ স্থায়ী স্টোরেজ। 1000 MB personal cloud storage for every user.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
